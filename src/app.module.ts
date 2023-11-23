@@ -12,7 +12,19 @@ import { PricingPlansModule } from './pricing-plans/pricing-plans.module';
 import { Tp2Module } from './tp2/tp2.module';
 
 @Module({
-  imports: [ClientsModule, UsersModule, PaymentTransactionsModule, ServiceProvidersModule, TeamsModule, JobsModule, RatingsModule, ServicesModule, SubscriptionsModule, PricingPlansModule, Tp2Module],
+  imports: [
+    ClientsModule,
+    UsersModule,
+    PaymentTransactionsModule,
+    ServiceProvidersModule,
+    TeamsModule,
+    JobsModule,
+    RatingsModule,
+    ServicesModule,
+    SubscriptionsModule,
+    PricingPlansModule,
+    Tp2Module,
+  ],
   controllers: [],
   providers: [],
 })
