@@ -25,7 +25,5 @@ import { Tp2Module } from './tp2/tp2.module';
     PricingPlansModule,
     Tp2Module,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}
