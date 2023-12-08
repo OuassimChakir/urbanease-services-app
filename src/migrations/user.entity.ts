@@ -24,7 +24,7 @@ export class UserEntity extends BaseEntity {
   @Column('varchar', { length: 50 })
   nom: string;
 
-  @Column('varchar', { length: 100 })
+  @Column('varchar', { length: 100, unique: true })
   email: string;
 
   @Column('varchar', { length: 200 })
@@ -40,7 +40,7 @@ export class UserEntity extends BaseEntity {
   phoneNumber: string;
 
   @Column('tinyint', { default: null, nullable: true })
-  isAdmin: string;
+  isAdmin: number;
 
   @OneToMany(() => ClientEntity, (client) => client.user)
   @JoinColumn()
