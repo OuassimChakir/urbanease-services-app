@@ -66,39 +66,4 @@ export class AuthService {
       throw new UnauthorizedException('Check your login credentials!');
     }
   }
-
-  async CreateNewUser(createNewUser: CreateNewUserDto): Promise<UserEntity> {
-    const {
-      prenom,
-      nom,
-      email,
-      password,
-      profilePicture,
-      phoneNumber,
-      isAdmin,
-    } = createNewUser;
-
-    const salt = await bcrypt.genSalt();
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const user: UserEntity = this.userRepo.create({
-      prenom,
-      nom,
-      email,
-      password: hashedPassword,
-      profilePicture,
-      phoneNumber,
-      isAdmin,
-    });
-
-    try {
-      await this.userRepo.save(user);
-      return user;
-    } catch (error) {
-      if (error.errno === 1062) {
-        throw new ConflictException('Username Already exists!');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
-  }
 }
