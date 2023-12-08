@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -25,5 +26,6 @@ export class PaymentEntity extends BaseEntity {
   transactionType: string;
 
   @ManyToOne(() => UserEntity, (user) => user.payments)
+  @JoinColumn({ name: 'idUser' })
   user: UserEntity;
 }

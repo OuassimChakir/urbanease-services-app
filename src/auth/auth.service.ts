@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../migrations/user.entity';
@@ -21,7 +22,6 @@ export class AuthService {
 
   async signUp(createNewUser: CreateNewUserDto) {
     const {
-      idUser,
       prenom,
       nom,
       email,
@@ -34,7 +34,6 @@ export class AuthService {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
     const user: UserEntity = this.userRepo.create({
-      idUser,
       prenom,
       nom,
       email,
@@ -63,6 +62,8 @@ export class AuthService {
       const payload: JwtPayload = { email };
       const accessToken = this.jwtService.sign(payload);
       return { accessToken };
+    } else {
+      throw new UnauthorizedException('Check your login credentials!');
     }
   }
 }

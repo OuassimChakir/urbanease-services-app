@@ -27,10 +27,10 @@ export class ServiceProviderEntity extends BaseEntity {
   etat: number;
 
   @ManyToOne(() => UserEntity, (user) => user.serviceProviders)
+  @JoinColumn({ name: 'idUser' })
   user: UserEntity;
 
   @OneToMany(() => RatingEntity, (rating) => rating.serviceProvider)
-  @JoinColumn()
   ratings: RatingEntity[];
 
   @ManyToMany(() => ServiceEntity)

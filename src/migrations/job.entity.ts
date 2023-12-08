@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -45,11 +46,14 @@ export class JobEntity extends BaseEntity {
   delete_at: string;
 
   @ManyToOne(() => ClientEntity, (client) => client.jobs, { nullable: true })
+  @JoinColumn({ name: 'idClient' })
   client: ClientEntity;
 
   @ManyToOne(() => ServiceEntity, (service) => service.jobs)
+  @JoinColumn({ name: 'idService' })
   service: ServiceEntity;
 
   @ManyToOne(() => TeamEntity, (team) => team.jobs, { nullable: true })
+  @JoinColumn({ name: 'idTeam' })
   team: TeamEntity;
 }
