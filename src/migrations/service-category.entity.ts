@@ -20,6 +20,6 @@ export class ServiceCategoryEntity extends BaseEntity {
   categoryDescription: string;
 
   @ManyToOne(() => ServiceEntity, (service) => service.serviceCategory)
-  @JoinColumn()
+  @JoinColumn({ name: 'idService' })
   services: ServiceEntity[];
 }

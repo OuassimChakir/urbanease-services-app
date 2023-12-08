@@ -3,6 +3,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -21,6 +22,7 @@ export class ClientEntity extends BaseEntity {
   dateJointure: string;
 
   @ManyToOne(() => UserEntity, (user) => user.clients)
+  @JoinColumn({ name: 'idUser' })
   user: UserEntity;
 
   @OneToMany(() => RatingEntity, (rating) => rating.client)

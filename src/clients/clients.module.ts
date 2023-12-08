@@ -6,6 +6,7 @@ import { ClientEntity } from '../migrations/client.entity';
 import { RatingEntity } from '../migrations/rating.entity';
 import { SubscriptionEntity } from '../migrations/subscription.entity';
 import { JobEntity } from '../migrations/job.entity';
+import { UserEntity } from '../migrations/user.entity';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { JobEntity } from '../migrations/job.entity';
       RatingEntity,
       SubscriptionEntity,
       JobEntity,
+      UserEntity,
     ]),
   ],
   controllers: [ClientsController],
