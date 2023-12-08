@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,8 +21,10 @@ export class SubscriptionEntity extends BaseEntity {
   endDate: string;
 
   @ManyToOne(() => ClientEntity, (client) => client.subscriptions)
+  @JoinColumn({ name: 'idClient' })
   client: ClientEntity;
 
   @ManyToOne(() => PlanEntity, (plan) => plan.subscriptions)
+  @JoinColumn({ name: 'idPlan' })
   plan: PlanEntity;
 }

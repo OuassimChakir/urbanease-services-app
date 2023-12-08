@@ -43,18 +43,15 @@ export class UserEntity extends BaseEntity {
   isAdmin: number;
 
   @OneToMany(() => ClientEntity, (client) => client.user)
-  @JoinColumn()
   clients: ClientEntity[];
 
   @OneToMany(
     () => ServiceProviderEntity,
     (serviceProvider) => serviceProvider.user,
   )
-  @JoinColumn()
   serviceProviders: ServiceProviderEntity[];
 
   @OneToMany(() => PaymentEntity, (payment) => payment.user)
-  @JoinColumn()
   payments: PaymentEntity[];
 
   @CreateDateColumn()

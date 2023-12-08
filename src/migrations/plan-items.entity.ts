@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -16,5 +17,6 @@ export class PlanItemsEntity extends BaseEntity {
   item: string;
 
   @ManyToOne(() => PlanEntity, (plan) => plan.planItems)
+  @JoinColumn({ name: 'idPlan' })
   plan: PlanEntity;
 }

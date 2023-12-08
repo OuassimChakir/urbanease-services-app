@@ -1,14 +1,12 @@
 import {
+  IsEmail,
+  IsInt,
   IsNotEmpty,
   IsOptional,
-  IsEmail,
-  MaxLength,
-  MinLength,
   IsString,
-  Matches,
-  IsInt,
 } from 'class-validator';
-export class CreateNewUserDto {
+
+export class UpdateClientDto {
   @IsNotEmpty()
   @IsString()
   prenom: string;
@@ -22,13 +20,6 @@ export class CreateNewUserDto {
   @IsString()
   email: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @MaxLength(35)
-  @MinLength(8)
-  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/)
-  password: string;
-
   @IsOptional()
   @IsString()
   profilePicture?: string;
@@ -36,8 +27,4 @@ export class CreateNewUserDto {
   @IsOptional()
   @IsString()
   phoneNumber?: string;
-
-  @IsNotEmpty()
-  @IsInt()
-  isAdmin: number;
 }

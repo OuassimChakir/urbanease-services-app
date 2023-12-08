@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -24,11 +25,13 @@ export class RatingEntity extends BaseEntity {
   reviewDate: string;
 
   @ManyToOne(() => ClientEntity, (client) => client.ratings)
+  @JoinColumn({ name: 'idClient' })
   client: ClientEntity;
 
   @ManyToOne(
     () => ServiceProviderEntity,
     (serviceProvider) => serviceProvider.ratings,
   )
+  @JoinColumn({ name: 'idServiceProvider' })
   serviceProvider: ServiceProviderEntity;
 }
