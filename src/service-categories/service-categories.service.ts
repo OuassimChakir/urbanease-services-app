@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ServiceCategoryEntity } from '../../migrations/service-category.entity';
+import { ServiceCategoryEntity } from '../migrations/service-category.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -33,11 +33,12 @@ export class ServiceCategoriesService {
     const existingServiceCategory = await this.getServiceCategoryById(id);
 
     if (!existingServiceCategory) {
-      throw new Error('Service category not found');
+      throw new NotFoundException('Service category not found');
     }
 
     existingServiceCategory.categoryName = serviceCategory.categoryName;
-    existingServiceCategory.categoryDescription = serviceCategory.categoryDescription;
+    existingServiceCategory.categoryDescription =
+      serviceCategory.categoryDescription;
 
     return await this.serviceCategoryRepository.save(existingServiceCategory);
   }
@@ -49,6 +50,6 @@ export class ServiceCategoriesService {
       throw new Error('Service category not found');
     }
 
-    await this.serviceCategoryRepository.delete(id);
+    await this.serviceCategoryRepository.remove(existingServiceCategory);
   }
 }

@@ -2,6 +2,8 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -19,10 +21,11 @@ export class ServiceEntity extends BaseEntity {
   @Column('text', { nullable: true })
   serviceDescription: string;
 
-  @OneToMany(
+  @ManyToOne(
     () => ServiceCategoryEntity,
     (serviceCategory) => serviceCategory.services,
   )
+  @JoinColumn({ name: 'idServiceCategory' })
   serviceCategory: ServiceCategoryEntity;
 
   @OneToMany(() => JobEntity, (job) => job.service)

@@ -19,7 +19,6 @@ export class ClientsService {
   constructor(
     @InjectRepository(ClientEntity)
     private clientRepo: Repository<ClientEntity>,
-
     @InjectRepository(UserEntity)
     private userRepo: Repository<UserEntity>,
   ) {}
@@ -53,7 +52,6 @@ export class ClientsService {
 
     try {
       await this.userRepo.save(user);
-      const idUser = user.idUser;
     } catch (error) {
       if (error.errno === 1062) {
         throw new ConflictException('Username Already exists!');
