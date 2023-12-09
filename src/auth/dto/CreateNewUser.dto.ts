@@ -8,6 +8,7 @@ import {
   Matches,
   IsInt,
 } from 'class-validator';
+
 export class CreateNewUserDto {
   @IsNotEmpty()
   @IsString()

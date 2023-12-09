@@ -53,7 +53,6 @@ export class ClientsService {
 
     try {
       await this.userRepo.save(user);
-      const idUser = user.idUser;
     } catch (error) {
       if (error.errno === 1062) {
         throw new ConflictException('Username Already exists!');
@@ -114,7 +113,7 @@ export class ClientsService {
   }
 
   async deleteClient(idClient: number): Promise<string> {
-    const client = await this.clientRepo.findOne({
+    const client: ClientEntity = await this.clientRepo.findOne({
       where: { idClient: idClient },
       relations: ['user'],
     });

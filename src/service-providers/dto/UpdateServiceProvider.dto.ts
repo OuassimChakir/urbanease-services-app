@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class UpdateClientDto {
+export class UpdateServiceProviderDto {
   @IsNotEmpty()
   @IsString()
   prenom: string;
@@ -21,4 +21,8 @@ export class UpdateClientDto {
   @IsOptional()
   @IsString()
   phoneNumber?: string;
+
+  @IsNotEmpty()
+  @IsString()
+  cnie: string;
 }
