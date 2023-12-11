@@ -120,15 +120,20 @@ export class ServiceProvidersService {
   }
 
   async getServiceProviders(): Promise<ServiceProviderEntity[]> {
-    return await this.serviceProviderRepo.find();
+    return await this.serviceProviderRepo.find({
+      relations: ['services', 'user'],
+    });
   }
 
   async getServiceProvider(
     idServiceProvider: number,
   ): Promise<ServiceProviderEntity> {
     try {
-      return await this.serviceProviderRepo.findOneBy({
-        idServiceProvider: idServiceProvider,
+      return await this.serviceProviderRepo.findOne({
+        where: {
+          idServiceProvider: idServiceProvider,
+        },
+        relations: ['services', 'user'],
       });
     } catch (error) {
       throw new NotFoundException(
