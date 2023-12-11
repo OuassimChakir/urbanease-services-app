@@ -141,7 +141,7 @@ export class ServiceProvidersService {
     idServiceProvider: number,
     etat: ServiceProviderEnum,
   ): Promise<void> {
-    const serviceProvider = await this.serviceProviderRepo.fineOneBy({
+    const serviceProvider = await this.serviceProviderRepo.findOneBy({
       idServiceProvider: idServiceProvider,
     });
     if (!serviceProvider)
@@ -150,6 +150,6 @@ export class ServiceProvidersService {
       );
     serviceProvider.etat = etat;
 
-    await this.serviceProviderRepo.update(serviceProvider);
+    await this.serviceProviderRepo.save(serviceProvider);
   }
 }

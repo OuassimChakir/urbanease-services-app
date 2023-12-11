@@ -3,12 +3,15 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ServiceCategoryEntity } from './service-category.entity';
 import { JobEntity } from './job.entity';
+import { ServiceProviderEntity } from './service-provider.entity';
 
 @Entity()
 export class ServiceEntity extends BaseEntity {
@@ -30,4 +33,8 @@ export class ServiceEntity extends BaseEntity {
 
   @OneToMany(() => JobEntity, (job) => job.service)
   jobs: JobEntity[];
+
+  @ManyToMany(() => ServiceProviderEntity)
+  @JoinTable()
+  serviceProviders: ServiceProviderEntity[];
 }

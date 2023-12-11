@@ -4,7 +4,7 @@ import { ServiceProvidersService } from './service-providers.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServiceProviderEntity } from '../migrations/service-provider.entity';
 import { RatingEntity } from '../migrations/rating.entity';
-import { ProvidedServicesModule } from './provided-services/provided-services.module';
+import { ProvidedServicesModule } from '../provided-services/provided-services.module';
 import { UserEntity } from '../migrations/user.entity';
 
 @Module({
