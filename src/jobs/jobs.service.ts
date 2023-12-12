@@ -9,6 +9,7 @@ import { ServiceEntity } from '../migrations/service.entity';
 import { ServiceProviderEntity } from '../migrations/service-provider.entity';
 import { UpdateJobDto } from './dto/UpdateJob.dto';
 import { UpdateJobStatusDto } from './dto/updateJobStatus.dto';
+import { CreatePlanJobDto } from './dto/CreatePlanJob.dto';
 
 @Injectable()
 export class JobsService {
@@ -147,6 +148,12 @@ export class JobsService {
     }
 
     job.status = status;
+    return await this.jobRepo.save(job);
+  }
+
+  async updateJobTeam(idJob: number, team: TeamEntity): Promise<JobEntity> {
+    const job: JobEntity = await this.getJob(idJob);
+    job.team = team;
     return await this.jobRepo.save(job);
   }
 }
