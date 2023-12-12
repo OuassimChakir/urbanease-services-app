@@ -13,7 +13,6 @@ export class ProvidedServicesService {
   constructor(
     @InjectRepository(ServiceProviderEntity)
     private serviceProviderRepo: Repository<ServiceProviderEntity>,
-
     @InjectRepository(ServiceEntity)
     private serviceRepo: Repository<ServiceEntity>,
   ) {}
