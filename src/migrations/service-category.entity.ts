@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ServiceEntity } from './service.entity';
-import { PlanEntity } from './plan.entity';
 
 @Entity()
 export class ServiceCategoryEntity extends BaseEntity {
@@ -21,7 +20,4 @@ export class ServiceCategoryEntity extends BaseEntity {
 
   @OneToMany(() => ServiceEntity, (service) => service.serviceCategory)
   services: ServiceEntity[];
-
-  @OneToMany(() => PlanEntity, (plan) => plan.serviceCategory)
-  plans: PlanEntity[];
 }

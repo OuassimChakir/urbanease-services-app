@@ -12,6 +12,7 @@ import {
 import { ServiceCategoryEntity } from './service-category.entity';
 import { JobEntity } from './job.entity';
 import { ServiceProviderEntity } from './service-provider.entity';
+import { PlanEntity } from './plan.entity';
 
 @Entity()
 export class ServiceEntity extends BaseEntity {
@@ -37,4 +38,7 @@ export class ServiceEntity extends BaseEntity {
   @ManyToMany(() => ServiceProviderEntity)
   @JoinTable()
   serviceProviders: ServiceProviderEntity[];
+
+  @OneToMany(() => PlanEntity, (plan) => plan.service)
+  plans: PlanEntity[];
 }

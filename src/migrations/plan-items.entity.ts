@@ -16,6 +16,9 @@ export class PlanItemsEntity extends BaseEntity {
   @Column('varchar', { length: 300 })
   item: string;
 
+  @Column('text')
+  value: string;
+
   @ManyToOne(() => PlanEntity, (plan) => plan.planItems)
   @JoinColumn({ name: 'idPlan' })
   plan: PlanEntity;

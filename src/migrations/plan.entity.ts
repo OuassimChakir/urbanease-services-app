@@ -11,7 +11,7 @@ import {
 import { JobEntity } from './job.entity';
 import { PlanItemsEntity } from './plan-items.entity';
 import { SubscriptionEntity } from './subscription.entity';
-import { ServiceCategoryEntity } from './service-category.entity';
+import { ServiceEntity } from './service.entity';
 
 @Entity()
 export class PlanEntity extends BaseEntity {
@@ -37,9 +37,6 @@ export class PlanEntity extends BaseEntity {
   @OneToMany(() => SubscriptionEntity, (subscription) => subscription.plan)
   subscriptions: SubscriptionEntity[];
 
-  @ManyToOne(
-    () => ServiceCategoryEntity,
-    (serviceCategory) => serviceCategory.plans,
-  )
-  serviceCategory: ServiceCategoryEntity;
+  @ManyToOne(() => ServiceEntity, (service) => service.plans)
+  service: ServiceEntity;
 }
