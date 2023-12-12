@@ -6,13 +6,22 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServiceEntity } from '../migrations/service.entity';
 import { JobEntity } from '../migrations/job.entity';
 import { ServiceCategoryEntity } from '../migrations/service-category.entity';
+import { PricingPlansService } from '../pricing-plans/pricing-plans.service';
+import { PlanEntity } from '../migrations/plan.entity';
+import { PlanItemsEntity } from '../migrations/plan-items.entity';
 
 @Module({
   imports: [
     ServiceCategoriesModule,
-    TypeOrmModule.forFeature([ServiceEntity, JobEntity, ServiceCategoryEntity]),
+    TypeOrmModule.forFeature([
+      ServiceEntity,
+      JobEntity,
+      ServiceCategoryEntity,
+      PlanEntity,
+      PlanItemsEntity,
+    ]),
   ],
   controllers: [ServicesController],
-  providers: [ServicesService],
+  providers: [ServicesService, PricingPlansService],
 })
 export class ServicesModule {}

@@ -15,7 +15,6 @@ export class ServicesService {
   constructor(
     @InjectRepository(ServiceEntity)
     private serviceRepo: Repository<ServiceEntity>,
-
     @InjectRepository(ServiceCategoryEntity)
     private serviceCategoryRepo: Repository<ServiceCategoryEntity>,
   ) {}

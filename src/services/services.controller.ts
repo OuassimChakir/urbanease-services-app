@@ -13,10 +13,14 @@ import { ServiceEntity } from '../migrations/service.entity';
 import { NewServiceDto } from './dto/NewService.dto';
 import { UpdateServiceDto } from './dto/UpdateService.dto';
 import { ServiceCategoryEntity } from '../migrations/service-category.entity';
+import { PricingPlansService } from '../pricing-plans/pricing-plans.service';
 
 @Controller('services')
 export class ServicesController {
-  constructor(private servicesService: ServicesService) {}
+  constructor(
+    private servicesService: ServicesService,
+    private planService: PricingPlansService,
+  ) {}
 
   @Get('/')
   getServices(
@@ -48,5 +52,12 @@ export class ServicesController {
   @Delete('/:idService/delete')
   deleteService(@Param('idService') idService: number): Promise<string> {
     return this.servicesService.deleteService(idService);
+  }
+
+  @Get('/:idService/pricing-plans')
+  getServicePlans(
+    @Param('idService') idService: number,
+  ): Promise<ServiceEntity> {
+    return this.planService.getServicePlans(idService);
   }
 }
