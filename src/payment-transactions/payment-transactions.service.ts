@@ -64,17 +64,24 @@ export class PaymentTransactionsService {
     invoice.paymentDate = paymentDate;
     invoice.paymentMethod = paymentMethod;
     invoice.status = status;
-
+    const currentDate = new Date();
+    const formattedDateTime = format(currentDate, 'yyyy-MM-dd HH:mm:ss');
+    invoice.updated_at = formattedDateTime;
     return this.paymentRepo.save(invoice);
   }
 
   async generateServiceProviderPayment(
+    serviceProvider: ServiceProviderEntity,
     payServiceProvider: PayServiceProviderDto,
   ) {
-    const { description, amount, transactionType, idUser } = payServiceProvider;
-    const user = await this.userRepo.findOneBy({ idUser: idUser });
+    const { description, amount, transactionType } = payServiceProvider;
+    const user = await this.userRepo.findOneBy({
+      idUser: serviceProvider.user.idUser,
+    });
     if (!user) {
-      throw new NotFoundException(`User ID: ${idUser} Not Found`);
+      throw new NotFoundException(
+        `Servic eProvider ID: ${serviceProvider.user.idUser} Not Found`,
+      );
     }
 
     const invoice: PaymentEntity = this.paymentRepo.create({
