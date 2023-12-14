@@ -11,8 +11,4 @@ export class PayServiceProviderDto {
 
   @IsNotEmpty()
   transactionType: TransacationTypeEnum = TransacationTypeEnum.OUTCOMING;
-
-  @IsInt()
-  @IsNotEmpty()
-  idUser: number;
 }

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  InternalServerErrorException,
   Param,
   Patch,
   Post,
@@ -13,10 +14,15 @@ import { NewServiceProviderDto } from './dto/NewServiceProvider.dto';
 import { UpdateServiceProviderDto } from './dto/UpdateServiceProvider.dto';
 import { ServiceProviderEntity } from '../migrations/service-provider.entity';
 import { UpdateServiceProviderStatusDto } from './dto/updateServiceProviderStatus.dto';
+import { PaymentEntity } from '../migrations/payment.entity';
+import { PaymentTransactionsService } from '../payment-transactions/payment-transactions.service';
 
 @Controller('service-providers')
 export class ServiceProvidersController {
-  constructor(private serviceProviderService: ServiceProvidersService) {}
+  constructor(
+    private serviceProviderService: ServiceProvidersService,
+    private paymentService: PaymentTransactionsService,
+  ) {}
 
   @Post('/new')
   createServiceProvide(
@@ -69,5 +75,42 @@ export class ServiceProvidersController {
       idServiceProvider,
       etat,
     );
+  }
+
+  /* -----------------------
+  / Payments
+  /---------------------- */
+  @Get('/payments/unpaid')
+  getAllUnpaidServiceProvidersPayments(): Promise<PaymentEntity[]> {
+    return this.paymentService.getAllUnpaidServiceProvidersPayments();
+  }
+  @Get('/payments/:idServiceProvider')
+  getServiceProviderPayments(
+    @Param('idServiceProvider') idServiceProvider: number,
+  ): void {
+    const serviceProvider: Promise<ServiceProviderEntity> =
+      this.serviceProviderService.getServiceProvider(idServiceProvider);
+    serviceProvider
+      .then((spEntity: ServiceProviderEntity) => {
+        return this.paymentService.getServiceProviderPayments(spEntity);
+      })
+      .catch((error): void => {
+        throw new InternalServerErrorException(error);
+      });
+  }
+
+  @Get('/payments/unpaid/:idServiceProvider')
+  getUnpaidServiceProviderPayments(
+    @Param('idServiceProvider') idServiceProvider: number,
+  ): void {
+    const serviceProvider: Promise<ServiceProviderEntity> =
+      this.serviceProviderService.getServiceProvider(idServiceProvider);
+    serviceProvider
+      .then((spEntity: ServiceProviderEntity) => {
+        return this.paymentService.getUnpaidServiceProviderPayments(spEntity);
+      })
+      .catch((error): void => {
+        throw new InternalServerErrorException(error);
+      });
   }
 }

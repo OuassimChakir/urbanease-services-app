@@ -5,12 +5,19 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PaymentEntity } from '../migrations/payment.entity';
 import { UserEntity } from '../migrations/user.entity';
 import { SubscriptionEntity } from '../migrations/subscription.entity';
+import { ServiceProvidersService } from '../service-providers/service-providers.service';
+import { ServiceProviderEntity } from '../migrations/service-provider.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([PaymentEntity, UserEntity, SubscriptionEntity]),
+    TypeOrmModule.forFeature([
+      PaymentEntity,
+      UserEntity,
+      SubscriptionEntity,
+      ServiceProviderEntity,
+    ]),
   ],
   controllers: [PaymentTransactionsController],
-  providers: [PaymentTransactionsService],
+  providers: [PaymentTransactionsService, ServiceProvidersService],
 })
 export class PaymentTransactionsModule {}
