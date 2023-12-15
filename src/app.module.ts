@@ -11,6 +11,9 @@ import { PricingPlansModule } from './pricing-plans/pricing-plans.module';
 import { Tp2Module } from './tp2/tp2.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { PaypalModule } from './paypal/paypal.module';
+import { UserService } from './user/user.service';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -35,7 +38,10 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
     }),
     AuthModule,
+    PaypalModule,
+    UserModule,
   ],
   controllers: [],
+  providers: [],
 })
 export class AppModule {}

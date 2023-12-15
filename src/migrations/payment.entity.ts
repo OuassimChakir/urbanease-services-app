@@ -17,6 +17,12 @@ export class PaymentEntity extends BaseEntity {
   idPayment: number;
 
   @Column('text', { nullable: true })
+  validPaymentId: string;
+
+  @Column('text', { nullable: true })
+  payerId: string;
+
+  @Column('text', { nullable: true })
   description: string;
 
   @Column('double')

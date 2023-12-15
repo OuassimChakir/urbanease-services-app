@@ -90,6 +90,14 @@ export class ClientsService {
     });
   }
 
+  async getClientByUser(idUser: number): Promise<ClientEntity> {
+    return await this.clientRepo.findOne({
+      where: {
+        user: { idUser: idUser },
+      },
+    });
+  }
+
   async updateClient(
     updateClientDto: UpdateClientDto,
     idClient: number,

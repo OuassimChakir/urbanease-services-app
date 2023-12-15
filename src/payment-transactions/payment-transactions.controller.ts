@@ -24,7 +24,10 @@ export class PaymentTransactionsController {
     @Param('idPayment') idPayment: number,
     @Body() clientPaymentDto: ClientPaymentDto,
   ): Promise<PaymentEntity> {
-    return this.paymentService.clientPayment(idPayment, clientPaymentDto);
+    return this.paymentService.clientSubscriptionPayment(
+      idPayment,
+      clientPaymentDto,
+    );
   }
 
   @Post('ServiceProvider/:idServiceProvider/generate')

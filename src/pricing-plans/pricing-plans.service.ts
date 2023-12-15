@@ -88,6 +88,7 @@ export class PricingPlansService {
       where: { idPlan: idPlan },
       relations: {
         planItems: true,
+        service: true,
       },
     });
 

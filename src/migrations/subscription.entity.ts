@@ -10,6 +10,7 @@ import {
 import { ClientEntity } from './client.entity';
 import { PlanEntity } from './plan.entity';
 import { PaymentEntity } from './payment.entity';
+import { SubscriptionStatusEnum } from '../subscriptions/subscription-status.enum';
 
 @Entity()
 export class SubscriptionEntity extends BaseEntity {
@@ -21,6 +22,9 @@ export class SubscriptionEntity extends BaseEntity {
 
   @Column('datetime', { default: null })
   endDate: string;
+
+  @Column('varchar', { length: 50 })
+  status: SubscriptionStatusEnum;
 
   @ManyToOne(() => ClientEntity, (client) => client.subscriptions)
   @JoinColumn({ name: 'idClient' })
