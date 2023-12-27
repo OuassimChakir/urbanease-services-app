@@ -9,6 +9,9 @@ import { ServiceEntity } from '../migrations/service.entity';
 import { ServiceProviderEntity } from '../migrations/service-provider.entity';
 import { UpdateJobDto } from './dto/UpdateJob.dto';
 import { UpdateJobStatusDto } from './dto/updateJobStatus.dto';
+import { PlanEntity } from '../migrations/plan.entity';
+import { JobStatusEnum } from './JobStatus.enum';
+import { JobTypeEnum } from './JobType.enum';
 import { CreatePlanJobDto } from './dto/CreatePlanJob.dto';
 
 @Injectable()
@@ -24,6 +27,8 @@ export class JobsService {
     private serviceRepo: Repository<ServiceEntity>,
     @InjectRepository(ServiceProviderEntity)
     private serviceProviderRepo: Repository<ServiceProviderEntity>,
+    @InjectRepository(PlanEntity)
+    private planRepo: Repository<PlanEntity>,
   ) {}
 
   /*------------------------
@@ -42,6 +47,7 @@ export class JobsService {
       price,
       idClient,
       idService,
+      idPlan,
     } = createJobDto;
 
     const client: ClientEntity = await this.clientRepo.findOneBy({
@@ -57,6 +63,12 @@ export class JobsService {
     if (!service)
       throw new NotFoundException(`Service ID ${idClient} Not Found!`);
 
+    const plan: PlanEntity = await this.planRepo.findOneBy({
+      idPlan: idPlan,
+    });
+    if (!service)
+      throw new NotFoundException(`Service ID ${idClient} Not Found!`);
+
     const newJob = this.jobRepo.create({
       jobStart,
       jobEnd,
@@ -67,6 +79,58 @@ export class JobsService {
     });
     newJob.client = client;
     newJob.service = service;
+    newJob.plan = plan;
+    if (team != null) {
+      newJob.team = team;
+    }
+
+    return await this.jobRepo.save(newJob);
+  }
+
+  async createPlanJob(
+    createPlanJobDto: CreatePlanJobDto,
+    team: TeamEntity,
+  ): Promise<JobEntity> {
+    const {
+      jobStart,
+      jobEnd,
+      status,
+      jobType,
+      description,
+      idClient,
+      idService,
+      idPlan,
+    } = createPlanJobDto;
+
+    const client: ClientEntity = await this.clientRepo.findOneBy({
+      idClient: idClient,
+    });
+
+    if (!client)
+      throw new NotFoundException(`Client ID ${idClient} Not Found!`);
+
+    const service: ServiceEntity = await this.serviceRepo.findOneBy({
+      idService: idService,
+    });
+    if (!service)
+      throw new NotFoundException(`Service ID ${idClient} Not Found!`);
+
+    const plan: PlanEntity = await this.planRepo.findOneBy({
+      idPlan: idPlan,
+    });
+    if (!service)
+      throw new NotFoundException(`Service ID ${idClient} Not Found!`);
+
+    const newJob = this.jobRepo.create({
+      jobStart,
+      jobEnd,
+      status,
+      jobType,
+      description,
+    });
+    newJob.client = client;
+    newJob.service = service;
+    newJob.plan = plan;
     if (team != null) {
       newJob.team = team;
     }

@@ -1,6 +1,5 @@
 import * as paypal from 'paypal-rest-sdk';
 import { PlanEntity } from '../migrations/plan.entity';
-import { PaymentMethodEnum } from '../payment-transactions/payment-method.enum';
 
 export class PaypalService {
   constructor() {

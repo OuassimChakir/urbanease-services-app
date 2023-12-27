@@ -5,6 +5,8 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -12,6 +14,9 @@ import {
 import { ClientEntity } from './client.entity';
 import { ServiceEntity } from './service.entity';
 import { TeamEntity } from './team.entity';
+import { PlanEntity } from './plan.entity';
+import { JobStatusEnum } from '../jobs/JobStatus.enum';
+import { JobTypeEnum } from '../jobs/JobType.enum';
 
 @Entity()
 export class JobEntity extends BaseEntity {
@@ -25,10 +30,10 @@ export class JobEntity extends BaseEntity {
   jobEnd: string;
 
   @Column('tinyint')
-  status: number;
+  status: JobStatusEnum;
 
   @Column('varchar', { nullable: true, length: 50 })
-  jobType: string;
+  jobType: JobTypeEnum;
 
   @Column('text', { nullable: true })
   description: string;
@@ -44,6 +49,10 @@ export class JobEntity extends BaseEntity {
 
   @DeleteDateColumn()
   delete_at: string;
+
+  @ManyToOne(() => PlanEntity, (plan) => plan.jobs)
+  @JoinColumn({ name: 'idPlan' })
+  plan: PlanEntity;
 
   @ManyToOne(() => ClientEntity, (client) => client.jobs, { nullable: true })
   @JoinColumn({ name: 'idClient' })

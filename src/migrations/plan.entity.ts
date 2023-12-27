@@ -27,8 +27,7 @@ export class PlanEntity extends BaseEntity {
   @Column('tinyint')
   planType: number;
 
-  @ManyToMany(() => JobEntity)
-  @JoinTable()
+  @OneToMany(() => JobEntity, (jobItem) => jobItem.plan)
   jobs: JobEntity[];
 
   @OneToMany(() => PlanItemsEntity, (planItem) => planItem.plan)

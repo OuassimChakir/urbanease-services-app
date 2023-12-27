@@ -23,8 +23,11 @@ export class SubscriptionEntity extends BaseEntity {
   @Column('datetime', { default: null })
   endDate: string;
 
-  @Column('varchar', { length: 50 })
+  @Column('varchar', { length: 50, default: null })
   status: SubscriptionStatusEnum;
+
+  @Column('int', { default: null })
+  credit: number;
 
   @ManyToOne(() => ClientEntity, (client) => client.subscriptions)
   @JoinColumn({ name: 'idClient' })

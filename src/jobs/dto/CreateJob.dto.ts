@@ -21,12 +21,16 @@ export class CreateJobDto {
   description?: string;
 
   @IsNumber()
-  price: number;
+  price?: number;
 
+  @IsNotEmpty()
   idClient: number;
 
   @IsNotEmpty()
   idService: number;
+
+  @IsNotEmpty()
+  idPlan: number;
 
   serviceProviderIds?: number[];
 }
