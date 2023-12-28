@@ -10,6 +10,7 @@ import {
   Post,
   Query,
   Redirect,
+  Headers,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/CreateJob.dto';
@@ -31,6 +32,7 @@ import { ClientsService } from '../clients/clients.service';
 import { UserService } from '../user/user.service';
 import { PaymentTransactionsService } from '../payment-transactions/payment-transactions.service';
 import { PlanTypeEnum } from '../pricing-plans/PlanType.enum';
+import { PaymentEntity } from '../migrations/payment.entity';
 
 @Controller('jobs')
 export class JobsController {
@@ -57,18 +59,12 @@ export class JobsController {
 
   @Post('/new')
   @Redirect()
-  async createJob(@Body() createJobDto: CreateJobDto) {
+  async createJob(@Body() createJobDto: CreateJobDto, @Headers() headers: any) {
     const { serviceProviderIds, idPlan } = createJobDto;
     const plan: PlanEntity = await this.planService.getPricingPlan(idPlan);
-    const team = await this.teamService.createTeam(serviceProviderIds);
+    const team: TeamEntity =
+      await this.teamService.createTeam(serviceProviderIds);
     createJobDto.price = plan.price;
-    await this.jobService.createJob(createJobDto, team);
-    return { url: '/jobs/payment/plan/' + plan.idPlan };
-  }
-  @Get('/payment/plan/:idPlan')
-  @Redirect()
-  async jobPayment(@Param('idPlan') idPlan: number) {
-    const plan: PlanEntity = await this.planService.getPricingPlan(idPlan);
     const success_url = 'jobs/payment/verify';
     const cancel_url = 'jobs/payment/verify';
     if (plan.planType == PlanTypeEnum.ONE_SESSION) {
@@ -77,6 +73,10 @@ export class JobsController {
         success_url,
         cancel_url,
       );
+      headers['job-data'] = JSON.stringify({
+        createJobDto,
+        team,
+      });
       return { url: paymentUrl };
     } else {
       throw new NotFoundException('One Time plan or Plan Not Found!');
@@ -84,10 +84,12 @@ export class JobsController {
   }
 
   @Get('/payment/verify')
-  async validateSubscription(
+  async validateJobPayment(
     @Query('paymentId') paymentId: string,
     @Query('PayerID') payerId: string,
+    @Headers('job-data') jobData: any,
   ) {
+    jobData = JSON.parse(jobData);
     const idUser = 2;
     const client = await this.clientService.getClientByUser(idUser);
     const user = await this.userService.getUser(idUser);
@@ -96,26 +98,31 @@ export class JobsController {
         paymentId,
         payerId,
       );
-      const plan = await this.planService.getPricingPlan(
+      const plan: PlanEntity = await this.planService.getPricingPlan(
         result.transactions[0].custom,
       );
 
       const subscription: SubscriptionEntity =
         await this.subscriptionService.newOneSubscription(client, plan);
-      const payment = await this.paymentService.initialSubscription(
-        result.transactions[0].amount.total,
-        result.create_time,
-        PaymentMethodEnum.PAYPAL,
-        TransacationTypeEnum.INCOMING,
-        result.transactions[0].description,
-        PaymentStatusEnum.PAID,
-        result.id,
-        result.payer.payer_info.payer_id,
-        user,
-        subscription,
+      const payment: PaymentEntity =
+        await this.paymentService.initialSubscription(
+          result.transactions[0].amount.total,
+          result.create_time,
+          PaymentMethodEnum.PAYPAL,
+          TransacationTypeEnum.INCOMING,
+          result.transactions[0].description,
+          PaymentStatusEnum.PAID,
+          result.id,
+          result.payer.payer_info.payer_id,
+          user,
+          subscription,
+        );
+      const job = await this.jobService.createJob(
+        jobData.createJobDto,
+        jobData.team,
       );
 
-      return { success: true, payment };
+      return { success: true, payment, job };
     } catch (error) {
       console.error('error executing paypal payment:', error);
       return { success: false, error: error.message };
