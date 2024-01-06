@@ -11,6 +11,8 @@ import { ClientEntity } from './client.entity';
 import { PlanEntity } from './plan.entity';
 import { PaymentEntity } from './payment.entity';
 import { SubscriptionStatusEnum } from '../subscriptions/subscription-status.enum';
+import { RatingEntity } from './rating.entity';
+
 
 @Entity()
 export class SubscriptionEntity extends BaseEntity {
@@ -40,4 +42,8 @@ export class SubscriptionEntity extends BaseEntity {
   @OneToMany(() => PaymentEntity, (payment) => payment.subscription)
   @JoinColumn({ name: 'idSubscription' })
   payments: PaymentEntity[];
+  
+  @OneToMany(() => RatingEntity, (rating) => rating.subscription)
+  ratings: RatingEntity[];
+  id: any;
 }

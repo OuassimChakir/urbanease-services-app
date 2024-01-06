@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { ClientEntity } from './client.entity';
 import { ServiceProviderEntity } from './service-provider.entity';
+import { SubscriptionEntity } from './subscription.entity';
 
 @Entity()
 export class RatingEntity extends BaseEntity {
@@ -20,9 +21,11 @@ export class RatingEntity extends BaseEntity {
 
   @Column('text')
   reviewTest: string;
+   
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  reviewDate: Date;
 
-  @Column('timestamp')
-  reviewDate: string;
+ 
 
   @ManyToOne(() => ClientEntity, (client) => client.ratings)
   @JoinColumn({ name: 'idClient' })
@@ -34,4 +37,17 @@ export class RatingEntity extends BaseEntity {
   )
   @JoinColumn({ name: 'idServiceProvider' })
   serviceProvider: ServiceProviderEntity;
+  
+  @ManyToOne(() => SubscriptionEntity, (subscription) => subscription.ratings)
+  subscription: SubscriptionEntity;
+
 }
+
+
+
+
+
+
+
+
+ 

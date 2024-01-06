@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClientEntity } from '../migrations/client.entity';
 import { Repository } from 'typeorm';
@@ -15,6 +15,7 @@ export class SubscriptionsService {
     private planRepo: Repository<PlanEntity>,
     @InjectRepository(SubscriptionEntity)
     private subscriptionRepo: Repository<SubscriptionEntity>,
+    
   ) {}
 
   async newSubscription(
@@ -89,4 +90,6 @@ export class SubscriptionsService {
     subscription.credit = newCredit;
     return await this.subscriptionRepo.save(subscription);
   }
+
 }
+
