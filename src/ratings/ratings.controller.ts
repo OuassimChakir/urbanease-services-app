@@ -27,4 +27,9 @@ export class RatingController {
     return this.ratingService.getRating(idRating);
   }
   
+  @Get('/all')
+  async getAllRatings(): Promise<RatingEntity[]> {
+    return this.ratingService.getAllRatings();
+  }
 }
+

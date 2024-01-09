@@ -3,6 +3,8 @@ import { IsInt, IsNotEmpty, IsString, Min, Max, IsOptional } from 'class-validat
 export class RatingDto {
   @IsNotEmpty()
   @IsInt()
+  @Min(0)
+  @Max(5)
   rating: number;
 
   @IsOptional()

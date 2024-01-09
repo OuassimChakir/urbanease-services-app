@@ -4,7 +4,7 @@ import { PaymentTransactionsModule } from './payment-transactions/payment-transa
 import { ServiceProvidersModule } from './service-providers/service-providers.module';
 import { TeamsModule } from './teams/teams.module';
 import { JobsModule } from './jobs/jobs.module';
-import { RatingsModule } from './ratings/ratings.module';
+import { RatingModule } from './ratings/ratings.module';
 import { ServicesModule } from './services/services.module';
 import { SubscriptionsModule } from './subscriptions/subscriptions.module';
 import { PricingPlansModule } from './pricing-plans/pricing-plans.module';
@@ -22,7 +22,7 @@ import { UserModule } from './user/user.module';
     ServiceProvidersModule,
     TeamsModule,
     JobsModule,
-    RatingsModule,
+    RatingModule,
     ServicesModule,
     SubscriptionsModule,
     PricingPlansModule,
