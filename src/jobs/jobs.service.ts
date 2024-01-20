@@ -11,8 +11,8 @@ import { UpdateJobDto } from './dto/UpdateJob.dto';
 import { UpdateJobStatusDto } from './dto/updateJobStatus.dto';
 import { PlanEntity } from '../migrations/plan.entity';
 import { JobStatusEnum } from './JobStatus.enum';
-import { JobTypeEnum } from './JobType.enum';
 import { CreatePlanJobDto } from './dto/CreatePlanJob.dto';
+import { EndPlanJobDto } from './dto/endPlanJob.dto';
 
 @Injectable()
 export class JobsService {
@@ -212,6 +212,19 @@ export class JobsService {
     }
 
     job.status = status;
+    return await this.jobRepo.save(job);
+  }
+
+  async endJob(endPlanJobDto: EndPlanJobDto): Promise<JobEntity> {
+    const { idJob, jobEnd } = endPlanJobDto;
+
+    const job: JobEntity = await this.jobRepo.findOneBy({ idJob: idJob });
+    if (!job) {
+      throw new NotFoundException(`Job ID ${idJob} Not Found!`);
+    }
+
+    job.status = JobStatusEnum.COMPLETED;
+    job.jobEnd = jobEnd;
     return await this.jobRepo.save(job);
   }
 

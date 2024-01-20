@@ -8,7 +8,6 @@ export class CreatePlanJobDto {
   jobStart: string;
 
   @IsString()
-  @IsNotEmpty()
   jobEnd: string;
 
   @IsNotEmpty()

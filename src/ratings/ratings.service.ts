@@ -1,39 +1,41 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { RatingEntity } from '../migrations/rating.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RatingDto } from './dto/rating.dto';
-import { SubscriptionEntity } from '../migrations/subscription.entity';
-
-
+import { ClientEntity } from '../migrations/client.entity';
+import { ServiceProviderEntity } from '../migrations/service-provider.entity';
+import { JobEntity } from '../migrations/job.entity';
 
 @Injectable()
 export class RatingService {
   constructor(
     @InjectRepository(RatingEntity)
     private ratingRepo: Repository<RatingEntity>,
-    @InjectRepository(SubscriptionEntity)
-    private subscriptionRepo: Repository<SubscriptionEntity>,
+    @InjectRepository(ClientEntity)
+    private clientEntity: Repository<ClientEntity>,
+    @InjectRepository(ServiceProviderEntity)
+    private serviceProviderEntityRepo: Repository<ServiceProviderEntity>,
+    @InjectRepository(JobEntity)
+    private jobEntityRepo: Repository<JobEntity>,
   ) {}
 
-
-  async getRatings(subscriptionId: number): Promise<RatingEntity[]> {
-    const subscription = await this.subscriptionRepo.findOne({  
-      where : {idSubscription: subscriptionId},
-      relations: ['ratings'],
+  async getRatings(): Promise<RatingEntity[]> {
+    const ratings = await this.ratingRepo.find({
+      relations: ['client', 'team', 'serviceProvider'],
     });
 
-    if (!subscription) {
-      throw new NotFoundException(`Subscription with ID ${subscriptionId} not found`);
+    if (!ratings) {
+      throw new NotFoundException(`No Rating has been found`);
     }
 
-    return subscription.ratings || [];
+    return ratings;
   }
-
 
   async getRating(idRating: number): Promise<RatingEntity> {
     const rating = await this.ratingRepo.findOne({
-      where : {idRating: idRating}
+      where: { idRating: idRating },
+      relations: ['client', 'team', 'serviceProvider'],
     });
 
     if (!rating) {
@@ -43,35 +45,52 @@ export class RatingService {
     return rating;
   }
 
-  
-  async createRating(idSubscription: number, ratingDto: RatingDto): Promise<RatingEntity> {
-    const subscription = await this.subscriptionRepo.findOne( {
-      where : {idSubscription: idSubscription}
-      });
-
-    if (!subscription) {      
-      throw new NotFoundException(`Subscription with ID ${idSubscription} not found`);
+  async createRating(
+    idJob: number,
+    ratingDto: RatingDto,
+  ): Promise<RatingEntity> {
+    const { rating, reviewText, reviewDate, idClient, idServiceProvider } =
+      ratingDto;
+    const client = await this.clientEntity.findOneBy({ idClient: idClient });
+    if (!client) {
+      throw new NotFoundException(`Client with ID ${idClient} not found`);
     }
 
-    const rating = this.ratingRepo.create({
-      rating: ratingDto.rating,
-      reviewTest: ratingDto.reviewTest, 
-      reviewDate: new Date(),
-      subscription,
+    const serviceProvider = await this.serviceProviderEntityRepo.findOneBy({
+      idServiceProvider: idServiceProvider,
+    });
+    if (!serviceProvider) {
+      throw new NotFoundException(
+        `Service Provider with ID ${idServiceProvider} not found`,
+      );
+    }
+
+    const job = await this.jobEntityRepo.findOneBy({
+      idJob: idJob,
+    });
+    if (!job) {
+      throw new NotFoundException(`Job with ID ${idJob} not found`);
+    }
+
+    const ratingEntity: RatingEntity = this.ratingRepo.create({
+      rating: rating,
+      reviewTest: reviewText,
+      reviewDate: reviewDate,
+      client: client,
+      job: job,
+      serviceProvider: serviceProvider,
     });
 
-    const savedRating = await this.ratingRepo.save(rating);
-
-    subscription.ratings.push(savedRating);
-    await this.subscriptionRepo.save(subscription);
-
+    const savedRating = await this.ratingRepo.save(ratingEntity);
     return savedRating;
   }
 
-
-  async updateRating(idRating: number, ratingDto: RatingDto): Promise<RatingEntity> {
-    const rating = await this.ratingRepo.findOne({ 
-      where : {idRating: idRating}
+  async updateRating(
+    idRating: number,
+    ratingDto: RatingDto,
+  ): Promise<RatingEntity> {
+    const rating = await this.ratingRepo.findOne({
+      where: { idRating: idRating },
     });
 
     if (!rating) {
@@ -79,16 +98,14 @@ export class RatingService {
     }
 
     rating.rating = ratingDto.rating;
-    rating.reviewTest = ratingDto.reviewTest;
+    rating.reviewTest = ratingDto.reviewText;
 
     return await this.ratingRepo.save(rating);
   }
 
-
-
   async deleteRating(idRating: number): Promise<void> {
-    const rating = await this.ratingRepo.findOne({ 
-      where : {idRating: idRating}
+    const rating = await this.ratingRepo.findOne({
+      where: { idRating: idRating },
     });
 
     if (!rating) {
@@ -98,9 +115,25 @@ export class RatingService {
     await this.ratingRepo.remove(rating);
   }
 
+  async getServiceProviderRating(
+    idServiceProvider: number,
+  ): Promise<ServiceProviderEntity> {
+    try {
+      const serviceProvider: ServiceProviderEntity =
+        await this.serviceProviderEntityRepo.findOne({
+          where: { idServiceProvider: idServiceProvider },
+          relations: ['ratings'],
+        });
 
-  async getAllRatings(): Promise<RatingEntity[]> {
-    return this.ratingRepo.find();
+      if (!serviceProvider || serviceProvider.ratings.length === 0) {
+        throw new NotFoundException(
+          'No ratings found for the service provider',
+        );
+      }
+
+      return serviceProvider;
+    } catch (error) {
+      throw new NotFoundException(error);
+    }
   }
 }
-

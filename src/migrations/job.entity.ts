@@ -8,6 +8,7 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,6 +18,7 @@ import { TeamEntity } from './team.entity';
 import { PlanEntity } from './plan.entity';
 import { JobStatusEnum } from '../jobs/JobStatus.enum';
 import { JobTypeEnum } from '../jobs/JobType.enum';
+import { RatingEntity } from './rating.entity';
 
 @Entity()
 export class JobEntity extends BaseEntity {
@@ -65,4 +67,7 @@ export class JobEntity extends BaseEntity {
   @ManyToOne(() => TeamEntity, (team) => team.jobs, { nullable: true })
   @JoinColumn({ name: 'idTeam' })
   team: TeamEntity;
+
+  @OneToMany(() => RatingEntity, (rating) => rating.job)
+  ratings: RatingEntity[];
 }

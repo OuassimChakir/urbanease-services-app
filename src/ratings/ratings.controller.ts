@@ -2,34 +2,34 @@ import { Controller, Param, Post, Body, Get } from '@nestjs/common';
 import { RatingService } from './ratings.service';
 import { RatingDto } from './dto/rating.dto';
 import { RatingEntity } from '../migrations/rating.entity';
+import { ServiceProviderEntity } from '../migrations/service-provider.entity';
 
 @Controller('ratings')
 export class RatingController {
   constructor(private readonly ratingService: RatingService) {}
 
-  @Post(':idSubscription')
+  @Post(':idJob/new')
   async createRating(
-    @Param('idSubscription') idSubscription: number,
+    @Param('idJob') idJob: number,
     @Body() ratingDto: RatingDto,
   ): Promise<RatingEntity> {
-    return this.ratingService.createRating(idSubscription, ratingDto);
+    return this.ratingService.createRating(idJob, ratingDto);
   }
 
-  @Get(':idSubscription')
-  async getRatings(
-    @Param('idSubscription') idSubscription: number,
-  ): Promise<RatingEntity[]> {
-    return this.ratingService.getRatings(idSubscription);
+  @Get('/serviceProvider/:idServiceProvider')
+  async getServiceProviderRatings(
+    @Param('idServiceProvider') idServiceProvider: number,
+  ): Promise<ServiceProviderEntity> {
+    return this.ratingService.getServiceProviderRating(idServiceProvider);
   }
 
-  @Get('/single/:idRating')
+  @Get('/:idRating')
   async getRating(@Param('idRating') idRating: number): Promise<RatingEntity> {
     return this.ratingService.getRating(idRating);
   }
-  
-  @Get('/all')
+
+  @Get('/')
   async getAllRatings(): Promise<RatingEntity[]> {
-    return this.ratingService.getAllRatings();
+    return this.ratingService.getRatings();
   }
 }
-

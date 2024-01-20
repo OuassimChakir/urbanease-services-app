@@ -12,6 +12,7 @@ import { UserEntity } from './user.entity';
 import { RatingEntity } from './rating.entity';
 import { JobEntity } from './job.entity';
 import { SubscriptionEntity } from './subscription.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class ClientEntity extends BaseEntity {
@@ -23,6 +24,7 @@ export class ClientEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.clients)
   @JoinColumn({ name: 'idUser' })
+  @Exclude({ toPlainOnly: true })
   user: UserEntity;
 
   @OneToMany(() => RatingEntity, (rating) => rating.client)

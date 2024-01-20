@@ -13,14 +13,14 @@ import {
 import { UserEntity } from './user.entity';
 import { RatingEntity } from './rating.entity';
 import { ServiceEntity } from './service.entity';
-import { ServiceProvidersService } from '../service-providers/service-providers.service';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class ServiceProviderEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   idServiceProvider: number;
 
-  @Column('timestamp')
+  @Column()
   cnie: string;
 
   @Column('tinyint')
@@ -28,6 +28,7 @@ export class ServiceProviderEntity extends BaseEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.serviceProviders)
   @JoinColumn({ name: 'idUser' })
+  @Exclude({ toPlainOnly: true })
   user: UserEntity;
 
   @OneToMany(() => RatingEntity, (rating) => rating.serviceProvider)

@@ -4,12 +4,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ClientEntity } from './client.entity';
 import { ServiceProviderEntity } from './service-provider.entity';
-import { SubscriptionEntity } from './subscription.entity';
+import { JobEntity } from './job.entity';
 
 @Entity()
 export class RatingEntity extends BaseEntity {
@@ -21,11 +20,9 @@ export class RatingEntity extends BaseEntity {
 
   @Column('text')
   reviewTest: string;
-   
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   reviewDate: Date;
-
- 
 
   @ManyToOne(() => ClientEntity, (client) => client.ratings)
   @JoinColumn({ name: 'idClient' })
@@ -37,17 +34,8 @@ export class RatingEntity extends BaseEntity {
   )
   @JoinColumn({ name: 'idServiceProvider' })
   serviceProvider: ServiceProviderEntity;
-  
-  @ManyToOne(() => SubscriptionEntity, (subscription) => subscription.ratings)
-  subscription: SubscriptionEntity;
 
+  @ManyToOne(() => JobEntity, (job: JobEntity) => job.ratings)
+  @JoinColumn({ name: 'idJob' })
+  job: JobEntity;
 }
-
-
-
-
-
-
-
-
- 

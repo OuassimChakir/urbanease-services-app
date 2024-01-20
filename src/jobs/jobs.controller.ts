@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   InternalServerErrorException,
   NotFoundException,
   Param,
@@ -10,7 +11,6 @@ import {
   Post,
   Query,
   Redirect,
-  Headers,
 } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/CreateJob.dto';
@@ -33,6 +33,7 @@ import { UserService } from '../user/user.service';
 import { PaymentTransactionsService } from '../payment-transactions/payment-transactions.service';
 import { PlanTypeEnum } from '../pricing-plans/PlanType.enum';
 import { PaymentEntity } from '../migrations/payment.entity';
+import { EndPlanJobDto } from './dto/endPlanJob.dto';
 
 @Controller('jobs')
 export class JobsController {
@@ -117,7 +118,7 @@ export class JobsController {
           user,
           subscription,
         );
-      const job = await this.jobService.createJob(
+      const job: JobEntity = await this.jobService.createJob(
         jobData.createJobDto,
         jobData.team,
       );
@@ -132,24 +133,37 @@ export class JobsController {
   @Post('/planjob/new')
   createPlanJob(@Body() createPlanJobDto: CreatePlanJobDto) {
     const { serviceProviderIds, idSubscription } = createPlanJobDto;
-    const team = this.teamService.createTeam(serviceProviderIds);
-    team
-      .then(async (teamEntity) => {
-        const planJob = await this.jobService.createPlanJob(
-          createPlanJobDto,
-          teamEntity,
-        );
-        const subscription =
-          await this.subscriptionService.getSubscriptionById(idSubscription);
-        await this.subscriptionService.updateSubscriptionCredit(
-          subscription,
-          subscription.credit - 1,
-        );
-        return planJob;
+
+    // Check Subscription
+    const subscription =
+      this.subscriptionService.getSubscriptionById(idSubscription);
+    return subscription
+      .then((subscriptionEntity: SubscriptionEntity) => {
+        const team: Promise<TeamEntity> =
+          this.teamService.createTeam(serviceProviderIds);
+        return team
+          .then(async (teamEntity) => {
+            await this.subscriptionService.updateSubscriptionCredit(
+              subscriptionEntity,
+              subscriptionEntity.credit - 1,
+            );
+            return await this.jobService.createPlanJob(
+              createPlanJobDto,
+              teamEntity,
+            );
+          })
+          .catch((error) => {
+            throw new InternalServerErrorException(error);
+          });
       })
-      .catch((error) => {
-        throw new InternalServerErrorException(error);
+      .catch((error): void => {
+        throw new NotFoundException(error);
       });
+  }
+
+  @Patch('/planjob/end')
+  endPlanJob(@Body() endPlanJobDto: EndPlanJobDto): Promise<JobEntity> {
+    return this.jobService.endJob(endPlanJobDto);
   }
 
   @Delete(':idJob/delete')
@@ -173,7 +187,9 @@ export class JobsController {
   }
 
   @Patch('/status/update')
-  updateJobStatus(updateJobStatusDto: UpdateJobStatusDto): Promise<JobEntity> {
+  updateJobStatus(
+    @Body() updateJobStatusDto: UpdateJobStatusDto,
+  ): Promise<JobEntity> {
     return this.jobService.updateJobStatus(updateJobStatusDto);
   }
 

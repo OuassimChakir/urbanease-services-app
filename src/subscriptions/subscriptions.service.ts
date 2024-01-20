@@ -15,7 +15,6 @@ export class SubscriptionsService {
     private planRepo: Repository<PlanEntity>,
     @InjectRepository(SubscriptionEntity)
     private subscriptionRepo: Repository<SubscriptionEntity>,
-    
   ) {}
 
   async newSubscription(
@@ -61,6 +60,7 @@ export class SubscriptionsService {
       },
     });
   }
+
   async getSubscriptionById(
     idSubscription: number,
   ): Promise<SubscriptionEntity> {
@@ -90,6 +90,5 @@ export class SubscriptionsService {
     subscription.credit = newCredit;
     return await this.subscriptionRepo.save(subscription);
   }
-
 }
 

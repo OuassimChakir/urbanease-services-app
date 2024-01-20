@@ -13,7 +13,6 @@ import { PaymentEntity } from './payment.entity';
 import { SubscriptionStatusEnum } from '../subscriptions/subscription-status.enum';
 import { RatingEntity } from './rating.entity';
 
-
 @Entity()
 export class SubscriptionEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -42,8 +41,4 @@ export class SubscriptionEntity extends BaseEntity {
   @OneToMany(() => PaymentEntity, (payment) => payment.subscription)
   @JoinColumn({ name: 'idSubscription' })
   payments: PaymentEntity[];
-  
-  @OneToMany(() => RatingEntity, (rating) => rating.subscription)
-  ratings: RatingEntity[];
-  id: any;
 }

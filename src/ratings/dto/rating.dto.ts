@@ -1,13 +1,33 @@
-import { IsInt, IsNotEmpty, IsString, Min, Max, IsOptional } from 'class-validator';
+import {
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  Min,
+  Max,
+  IsOptional,
+  IsDateString,
+} from 'class-validator';
 
 export class RatingDto {
   @IsNotEmpty()
   @IsInt()
-  @Min(0)
+  @Min(1)
   @Max(5)
   rating: number;
 
   @IsOptional()
   @IsString()
-  reviewTest?: string;
+  reviewText?: string;
+
+  @IsNotEmpty()
+  @IsDateString()
+  reviewDate: string;
+
+  @IsNotEmpty()
+  @IsInt()
+  idClient: number;
+
+  @IsNotEmpty()
+  @IsInt()
+  idServiceProvider: number;
 }

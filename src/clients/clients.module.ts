@@ -7,6 +7,7 @@ import { RatingEntity } from '../migrations/rating.entity';
 import { SubscriptionEntity } from '../migrations/subscription.entity';
 import { JobEntity } from '../migrations/job.entity';
 import { UserEntity } from '../migrations/user.entity';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { UserEntity } from '../migrations/user.entity';
       JobEntity,
       UserEntity,
     ]),
+    AuthModule,
   ],
   controllers: [ClientsController],
   providers: [ClientsService],

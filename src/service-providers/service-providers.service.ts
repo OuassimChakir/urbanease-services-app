@@ -28,15 +28,9 @@ export class ServiceProvidersService {
     createServiceProviderUser: CreateNewUserDto,
     newServiceProvider: NewServiceProviderDto,
   ): Promise<void> {
-    const {
-      prenom,
-      nom,
-      email,
-      password,
-      profilePicture,
-      phoneNumber,
-      isAdmin,
-    } = createServiceProviderUser;
+    const { prenom, nom, email, password, profilePicture, phoneNumber } =
+      createServiceProviderUser;
+    const isAdmin = 3;
     const { cnie, etat } = newServiceProvider;
 
     const salt = await bcrypt.genSalt();

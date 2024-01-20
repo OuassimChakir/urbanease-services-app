@@ -27,16 +27,9 @@ export class ClientsService {
     client: NewClientDto,
     clientUser: CreateNewUserDto,
   ): Promise<void> {
-    const {
-      prenom,
-      nom,
-      email,
-      password,
-      profilePicture,
-      phoneNumber,
-      isAdmin,
-    } = clientUser;
-
+    const { prenom, nom, email, password, profilePicture, phoneNumber } =
+      clientUser;
+    const isAdmin = 2;
     const { dateJointure } = client;
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
