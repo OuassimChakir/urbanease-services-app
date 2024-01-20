@@ -4,12 +4,14 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { JobEntity } from './job.entity';
 import { PlanItemsEntity } from './plan-items.entity';
 import { SubscriptionEntity } from './subscription.entity';
+import { ServiceEntity } from './service.entity';
 
 @Entity()
 export class PlanEntity extends BaseEntity {
@@ -22,8 +24,10 @@ export class PlanEntity extends BaseEntity {
   @Column('double')
   price: number;
 
-  @ManyToMany(() => JobEntity)
-  @JoinTable()
+  @Column('tinyint')
+  planType: number;
+
+  @OneToMany(() => JobEntity, (jobItem) => jobItem.plan)
   jobs: JobEntity[];
 
   @OneToMany(() => PlanItemsEntity, (planItem) => planItem.plan)
@@ -31,4 +35,7 @@ export class PlanEntity extends BaseEntity {
 
   @OneToMany(() => SubscriptionEntity, (subscription) => subscription.plan)
   subscriptions: SubscriptionEntity[];
+
+  @ManyToOne(() => ServiceEntity, (service) => service.plans)
+  service: ServiceEntity;
 }

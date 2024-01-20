@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ServiceProviderEntity } from './service-provider.entity';
-import { ServiceProvidersService } from '../service-providers/service-providers.service';
 import { JobEntity } from './job.entity';
 
 @Entity()
@@ -17,7 +16,7 @@ export class TeamEntity extends BaseEntity {
 
   @ManyToMany(() => ServiceProviderEntity)
   @JoinTable()
-  serviceProviders: ServiceProvidersService[];
+  serviceProviders: ServiceProviderEntity[];
 
   @OneToMany(() => JobEntity, (job) => job.team)
   jobs: JobEntity[];

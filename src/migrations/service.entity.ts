@@ -2,11 +2,17 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ServiceCategoryEntity } from './service-category.entity';
 import { JobEntity } from './job.entity';
+import { ServiceProviderEntity } from './service-provider.entity';
+import { PlanEntity } from './plan.entity';
 
 @Entity()
 export class ServiceEntity extends BaseEntity {
@@ -19,12 +25,20 @@ export class ServiceEntity extends BaseEntity {
   @Column('text', { nullable: true })
   serviceDescription: string;
 
-  @OneToMany(
+  @ManyToOne(
     () => ServiceCategoryEntity,
     (serviceCategory) => serviceCategory.services,
   )
+  @JoinColumn({ name: 'idServiceCategory' })
   serviceCategory: ServiceCategoryEntity;
 
   @OneToMany(() => JobEntity, (job) => job.service)
   jobs: JobEntity[];
+
+  @ManyToMany(() => ServiceProviderEntity)
+  @JoinTable()
+  serviceProviders: ServiceProviderEntity[];
+
+  @OneToMany(() => PlanEntity, (plan) => plan.service)
+  plans: PlanEntity[];
 }

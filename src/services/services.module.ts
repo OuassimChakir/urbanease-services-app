@@ -1,17 +1,27 @@
 import { Module } from '@nestjs/common';
-import { ServiceCategoriesModule } from './service-categories/service-categories.module';
+import { ServiceCategoriesModule } from '../service-categories/service-categories.module';
 import { ServicesController } from './services.controller';
 import { ServicesService } from './services.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServiceEntity } from '../migrations/service.entity';
 import { JobEntity } from '../migrations/job.entity';
+import { ServiceCategoryEntity } from '../migrations/service-category.entity';
+import { PricingPlansService } from '../pricing-plans/pricing-plans.service';
+import { PlanEntity } from '../migrations/plan.entity';
+import { PlanItemsEntity } from '../migrations/plan-items.entity';
 
 @Module({
   imports: [
     ServiceCategoriesModule,
-    TypeOrmModule.forFeature([ServiceEntity, JobEntity]),
+    TypeOrmModule.forFeature([
+      ServiceEntity,
+      JobEntity,
+      ServiceCategoryEntity,
+      PlanEntity,
+      PlanItemsEntity,
+    ]),
   ],
   controllers: [ServicesController],
-  providers: [ServicesService],
+  providers: [ServicesService, PricingPlansService],
 })
 export class ServicesModule {}
